@@ -2,13 +2,11 @@ const tf = require('@tensorflow/tfjs-node');
 const fs = require('fs');
 
 // export TF_CPP_MIN_LOG_LEVEL=2
-// ffmpeg -i ../../fullHD/2019-10-12_11-34-22.mp4-342.mp4 -vframes 1 -c:v png -vf scale=320:-1 -f image2pipe - > out.png
-// ffmpeg -i ../../fullHD/2019-10-12_11-34-22.mp4-342.mp4 -vframes 1 -c:v png -vf scale=320:-1 -f image2pipe - | node stream-test.js
-
-// ffmpeg -i ../../fullHD/2019-10-12_11-34-22.mp4-342.mp4 -vframes 1 -c:v png -vf scale=320:180 -f image2pipe - | node stream-test.js  
+// ffmpeg -i ../../chunks/2019-10-12_11-34-22.mp4-342.mp4 -vframes 1 -c:v png -vf scale=320:-1 -f image2pipe - > out.png
+// ffmpeg -i ../../chunks/2019-10-12_11-34-22.mp4-342.mp4 -vframes 1 -c:v png -vf scale=320:-1 -f image2pipe - | base64 | node stream-test.js
+// ffmpeg -i ../../chunks/2019-10-12_11-34-22.mp4-342.mp4 -vframes 1 -c:v png -vf scale=320:-1 -f image2pipe - | base64 | node stream-test.js  
 
 const stdin = process.stdin;
-const stdout = process.stdout;
 let data = '';
 
 const posenet = require('@tensorflow-models/posenet');
@@ -55,7 +53,7 @@ const processImage = _data => {
 	img.onerror = (err) => console.error(err);
 	img.onload = () => {
 		console.log('Image Loaded');
-			
+
 		const canvas = createCanvas(img.width, img.height);
 		const ctx = canvas.getContext('2d');
 		ctx.drawImage(img, 0, 0);
@@ -63,7 +61,7 @@ const processImage = _data => {
 		getPose(input);
 	}
 
-	img.src = 'data:image/png;base64, '+_data;
+	img.src = 'data:image/png;base64, ' + _data;
 
 	console.log('END processImage');
 }
@@ -79,9 +77,4 @@ stdin.on('end', () => {
 	processImage(data);
 	console.log('END');
 });
-
-
-// setInterval(()=>{},100);
-
-
 
